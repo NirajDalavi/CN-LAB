@@ -29,7 +29,7 @@ def generate_keypair(p, q):
         raise ValueError('p and q cannot be equal')
     n = p * q
     phi = (p-1) * (q-1)
-    e = 343
+    e = 2
     g = gcd(e, phi)
     while g != 1:
         e+=1
