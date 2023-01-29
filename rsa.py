@@ -1,64 +1,41 @@
-# RSA Encryption/Decryption Program
 import random
+import math
 
-def gcd(a, b):
-    while b != 0:
-        a, b = b, a % b
-    return a
-
-def modinv(a, m):
-    for x in range(1, m):
-        if (a * x) % m == 1:
-            return x
-    return None
-
-def is_prime(num):
-    if num == 2:
-        return True
-    if num < 2 or num % 2 == 0:
-        return False
-    for i in range(3, int(num ** 0.5) + 1, 2):
-        if num % i == 0:
-            return False
-    return True
+def multiplicative_inverse(e, phi):
+    d = 0
+    k = 1
+    while True:
+        d = (phi * k + 1) / e
+        if d.is_integer():
+            return int(d)
+        k += 1
 
 def generate_keypair(p, q):
-    if not (is_prime(p) and is_prime(q)):
-        raise ValueError('Both numbers must be prime.')
-    elif p == q:
-        raise ValueError('p and q cannot be equal')
     n = p * q
     phi = (p-1) * (q-1)
-    e = 2
-    g = gcd(e, phi)
+    e = random.randint(1, phi)
+    g = math.gcd(e, phi)
     while g != 1:
-        e+=1
-        g = gcd(e, phi)
-    d = modinv(e, phi)
-    return ((e, n), (d,n),phi,e)
+        e = random.randrange(1, phi)
+        g = math.gcd(e, phi)
+    d = multiplicative_inverse(e, phi)
+    return ((e, n), (d, n))
 
 def encrypt(pk, plaintext):
     key, n = pk
-    cipher = (plaintext ** key) % n 
+    cipher = [(ord(char) ** key) % n for char in plaintext] #Calculated (char^key)%n for each char of PT
     return cipher
 
 def decrypt(pk, ciphertext):
     key, n = pk
-    plain = (ciphertext ** key) % n 
-    return (plain)
+    plain = [chr((char ** key) % n) for char in ciphertext]
+    return ''.join(plain)
 
 if __name__ == '__main__':
-    p = int(input("Enter a prime number (17, 19, 23, etc): "))
-    q = int(input("Enter another prime number (Not one you entered above): "))
-    print("Generating your public/private keypairs now . . .")
-    public, private,phi,e = generate_keypair(p, q)
-    print("Value of phi is",phi)
-    print("Value of e is",e)
-    print("Your public key is ", public ," and your private key is ", private)
-    message = int(input("Enter a message to encrypt with your public key: "))
+    p = 61
+    q = 53
+    public, private = generate_keypair(p, q)
+    message = input("Enter a message to encrypt: ")
     encrypted_msg = encrypt(public, message)
-    print("Your encrypted message is: ")
-    print( encrypted_msg)
-    print("Decrypting message with private key ", private ," . . .")
-    print("Your message is:")
-    print(decrypt(private, encrypted_msg))
+    print(f"Encrypted message: {encrypted_msg}")
+    print(f"Decrypted message: {decrypt(private, encrypted_msg)}")
