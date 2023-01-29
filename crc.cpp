@@ -1,54 +1,48 @@
-// CRC 16bits
-
-#include <iostream>
-#include <string.h>
-
+#include<bits//stdc++.h>
 using namespace std;
 
-int crc(char *ip, char *op, char *poly, int mode)
-{
-    strcpy(op, ip);
-    if (mode)
-    {
-        for (int i = 1; i < strlen(poly); i++)
-            strcat(op, "0");
+string crc(string data, string poly, bool errChk){
+    string rem = data;
+    if(!errChk){
+        for(int i = 0; i < poly.length()-1; i++)
+            rem.append("0");
     }
-    /* Perform XOR on the msg with the selected polynomial */
-    for (int i = 0; i < strlen(ip); i++)
-    {
-        if (op[i] == '1')
-        {
-            for (int j = 0; j < strlen(poly); j++)
-            {
-                if (op[i + j] == poly[j])
-                    op[i + j] = '0';
-                else
-                    op[i + j] = '1';
+    for(int i = 0; i < rem.length()-poly.length()+1; i++){
+        if(rem[i] == '1'){
+            for(int j = 0; j < poly.length(); j++){
+                if(rem[i+j] == poly[j]){
+                    rem[i+j] = '0';
+                }
+                else{
+                    rem[i+j] = '1';
+                }
             }
         }
     }
-    /* check for errors. return 0 if error detected */
-    for (int i = 0; i < strlen(op); i++)
-        if (op[i] == '1')
-            return 0;
-    return 1;
-}
+    return rem.substr(rem.length()-poly.length()+1);
+}   
 
-int main()
-{
-    char ip[50], op[50], recv[50];
-    char poly[] = "10001000000100001";
+int main(){
+    string data, poly;
+    cout << "Enter data to be sent: ";
+    cin >> data;
 
-    cout << "Enter the input message in binary" << endl;
-    cin >> ip;
-    crc(ip, op, poly, 1);
-    cout << "The transmitted message is: " << ip << op + strlen(ip) << endl;
-    cout << "Enter the received message in binary" << endl;
-    cin >> recv;
-    if (crc(recv, op, poly, 0))
-        cout << "No error in data" << endl;
-    else
-        cout << "Error in data transmission has occurred" << endl;
+    cout << "Enter gererating polynomial : ";
+    cin >> poly;
 
-    return 0;
+    string rem = crc(data, poly, 0);
+    string codeword = data+rem;
+    cout << "Remainder : " << rem << endl;
+    cout << "Codeword : " << codeword << endl;
+
+    //Error checking
+    string newCodeword;
+    cout << "Enter data that is recieved : ";
+    cin >> newCodeword;
+    string newRem = crc(newCodeword, poly, 1);
+    if(stoi(newRem) == 0)
+        cout << "No error in data transmission" << endl;
+    else    
+        cout << "Error in data transmission" << endl;
+
 }
