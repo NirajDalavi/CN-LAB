@@ -13,10 +13,10 @@ def multiplicative_inverse(e, phi):
 def generate_keypair(p, q):
     n = p * q
     phi = (p-1) * (q-1)
-    e = random.randint(1, phi)
+    e = 2
     g = math.gcd(e, phi)
     while g != 1:
-        e = random.randrange(1, phi)
+        e +=1
         g = math.gcd(e, phi)
     d = multiplicative_inverse(e, phi)
     return ((e, n), (d, n))
