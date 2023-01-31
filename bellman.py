@@ -1,4 +1,3 @@
-
 class Graph:
 
     def __init__(self, vertices):
@@ -8,7 +7,7 @@ class Graph:
     def addEdge(self, u, v, w):
         self.graph.append([u, v, w])
 
-    def printArr(self, dist):
+    def printSol(self, dist):
         print("Vertex Distance from Source")
         for i in range(self.V):
             print("{0}\t\t{1}".format(i, dist[i]))
@@ -43,27 +42,31 @@ class Graph:
                 return
 
         # print all distance
-        self.printArr(dist)
+        self.printSol(dist)
 
 
 # Driver's code
 if __name__ == '__main__':
-    n=int(input("Enter the number of vertices: "))
-    e=int(input("Enter the number of egdes: "))
-    print("Enter the edges (Input format:v1 v2 weight):")
-    g = Graph(n)
-    for i in range(e):
-        s=input().split(" ")
-        if int(s[0]) > n+1 or int(s[0]) <0 or int(s[1]) > n+1 or int(s[1]) <0:
+    v=int(input("Enter the number of vertices: "))
+    e=int(input("Enter the number of edges: "))
+    print("Enter the src dest & weight of the edges:")
+    g = Graph(v)
+    i=0
+    while i < e:
+        s,d,w=map(int,input().split())
+        if s > v-1 or s < 0 or d > v-1 or d < 0:
             print("Invalid edge. Enter again.")
             i-=1
         else:
-            g.addEdge(int(s[0]),int(s[1]),int(s[2]) )      
+            g.addEdge(s, d, w)
+        i+=1          
     src=int(input('Enter Source vertex: '))
-    flag = True
-    if src<0 or src>n+1:
-        flag=False
-    while(flag==False):
-        src=int(input("Enter Source vertex again: "))
+    flag = False
+    while flag == False:
+        if src > v-1 or src < 0:
+            src=int(input('Invalid Source vertex Enter again! : '))
+        else:
+            flag = True    
+
     # function call
     g.BellmanFord(src)
