@@ -19,10 +19,8 @@ int main(){
     for (i=0;i<nop;i++){
         cin >> a[i];
     }
-    int incr = 0;//  Bsize  = 10 , tr =2 ,  init t = 4
-    i=0;   
-    int flag=0;      
-    ///cout << "\nTOkens : " << tokens;          // 3
+    int incr = 0;
+    i=0;         
     while(i<nop){//
         if (tokens<Bsize ){
             incr=0;
@@ -38,7 +36,7 @@ int main(){
         }else
             cout << "Bucket is full";
         if(a[i] > tokens){
-            if(a[i]<Bsize){
+            if(a[i]<=Bsize){
                 cout << "\nInsufficient Tokens.. Packet waiting..";
                 goto last;
             }else if (a[i]>Bsize){
@@ -54,7 +52,7 @@ int main(){
             last:
             continue;
         }
-        if(a[i]<=tokens){
+        else{
             tokens-=a[i];
             cout << "\n Data of size "<< a[i]<< "Mb Transmitted \n";
             i++;
