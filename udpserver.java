@@ -12,9 +12,10 @@ public class udpserver{
             aSocket=new DatagramSocket(ServerPort);
             byte[] buffer=new byte[1000];
             byte[] buff=new byte[1000];
+            byte[] msg=new byte[1000];
+            
             DatagramPacket data1=new DatagramPacket(buff,buff.length);
             aSocket.receive(data1);
-            byte[] msg=new byte[1000];
             msg=data1.getData();
             System.out.println(new String(msg,0,data1.getLength()));
             System.out.println("\nEnter message to be sent:");
