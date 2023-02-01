@@ -14,7 +14,8 @@ int main(){
     cin >> Bsize;
     cout << "Enter Initial Tokens:  ";
     cin >> tokens;
-    
+    cout << "Enter Number of steps to simulate:  ";
+    cin >> nop;
     cout << "\nEnter "<< nop << " values of input data: ";
     for (i=0;i<nop;i++){
         cin >> a[i];
@@ -23,10 +24,8 @@ int main(){
     i=0;         
     while(i<nop){//
         if (tokens<Bsize ){
-            incr=0;
             int temp = tokens+tokenRate;
             if( Bsize>temp){
-                //cout << "Here tokens = "<< tokens;
                 incr = tokenRate;
             }else{
                 incr = Bsize-tokens;
@@ -34,27 +33,23 @@ int main(){
             cout << "\n" << incr << " tokens added";
             tokens+=incr;
         }else
-            cout << "Bucket is full";
+            cout << "\nBucket is full";
         if(a[i] > tokens){
             if(a[i]<=Bsize){
                 cout << "\nInsufficient Tokens.. Packet waiting..";
-                goto last;
             }else if (a[i]>Bsize){
                 if(Bsize > tokens){
                     cout << "\nData bigger than bucket size.. waiting till bucket is full..";
-                    goto last;
                 }if(Bsize == tokens){
-                    cout << "\nTransmitted Data: " << Bsize <<"Mb... Loss: " << a[i]-Bsize <<"\n";
+                    cout << "\nTransmitted Data: " << Bsize <<"Mb... Loss: " << a[i]-Bsize <<"Mb\n";
                     i++;
-                    tokens-=Bsize;
+                    tokens=0;
                 }
             }
-            last:
-            continue;
         }
         else{
             tokens-=a[i];
-            cout << "\n Data of size "<< a[i]<< "Mb Transmitted \n";
+            cout << "\nData of size "<< a[i]<< "Mb Transmitted \n";
             i++;
         }
         
