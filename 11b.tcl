@@ -94,10 +94,24 @@ $ftp0 attach-agent $tcp0
 #Define a 'finish' procedure 
 proc finish {} { 
 global ns tracefile namfile 
-$ns flush-trace 
-close $tracefile 
-close $namfile 
+$ns flush-trace
+close $tracefile
+close $namfile
+exec nam p6.nam &
+exec echo "Number of packets dropped is : " &
+exec grep -c "^D" p6.tr &
+exit 0
+}
 
+$ns at 1.0 "$cbr0 start"
+$ns at 2.0 "$ftp0 start"
+$ns at 180.0 "$ftp0 stop"
+$ns at 200.0 "$cbr0 stop"
+$ns at 200.0 "finish"
+$ns at 70 "$n4 setdest 100 60 20"
+$ns at 100 "$n4 setdest 700 300 20"
+$ns at 150 "$n4 setdest 900 200 20"
+$ns run
 
 #AWK file (filename.awk) 
 BEGIN{ 
