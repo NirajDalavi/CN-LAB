@@ -1,0 +1,163 @@
+Import pandas as pd
+
+Import numpy as np
+
+From sklearn.neighbors import KNeighborsClassifier
+
+From sklearn.model_selection import train_test_split
+
+From scipy.spatial.distance import cdist
+
+From sklearn.metrics import accuracy_score
+
+# Load Glass dataset
+
+Glass = pd.read_csv(“glass.csv”)
+
+Glass_X = glass.drop(“Type”, axis=1)
+
+Glass_y = glass[“Type”]
+
+# Load Fruit dataset
+
+Fruit = pd.read_csv(“fruit.csv”)
+
+Fruit_X = fruit.drop(“fruit_label”, axis=1)
+
+Fruit_y = fruit[“fruit_label”]
+
+# Define distance metrics
+
+Def euclidean_distance(x1, x2):
+
+    Return np.sqrt(np.sum((x1 – x2) ** 2))
+
+Def manhattan_distance(x1, x2):
+
+    Return np.sum(np.abs(x1 – x2))
+
+# Define KNN classifier
+
+Def KNN_classifier(X_train, y_train, X_test, k, distance_metric):
+
+    Y_pred = []
+
+    For I in range(X_test.shape[0]):
+
+        Distances = cdist(X_train, [X_test.iloc[i]], metric=distance_metric)
+
+        Nearest_indices = np.argsort(distances, axis=0)[:k].flatten()
+
+        Nearest_labels = y_train.iloc[nearest_indices]
+
+        Label_counts = np.bincount(nearest_labels)
+
+        Predicted_label = np.argmax(label_counts)
+
+        Y_pred.append(predicted_label)
+
+    Return y_pred
+
+# Define function to split dataset into training and testing
+
+Def split_data(X, y, method):
+
+    If method == “90-10”:
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
+
+        Return X_train, X_test, y_train, y_test
+
+    Elif method == “70-30”:
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+        Return X_train, X_test, y_train, y_test
+
+    Elif method == “leave-one-out”:
+
+        X_train = X[:-1]
+
+        X_test = X.iloc[[-1]]
+
+        Y_train = y[:-1]
+
+        Y_test = y.iloc[[-1]]
+
+        Return X_train, X_test, y_train, y_test
+
+# Run KNN classifier for Glass dataset
+
+For method in [“90-10”, “70-30”, “leave-one-out”]:
+
+    Print(f”Results for Glass dataset using {method} split and Euclidean distance:”)
+
+    X_train, X_test, y_train, y_test = split_data(glass_X, glass_y, method)
+
+    For k in [3, 5, 7]:
+
+        Y_pred = KNN_classifier(X_train, y_train, X_test, k, euclidean_distance)
+
+        Print(f”k={k}: Accuracy = {accuracy_score(y_test, y_pred)}”)
+
+    Print()
+
+    
+
+    Print(f”Results for Glass dataset using {method} split and Manhattan distance:”)
+
+    X_train, X_test, y_train, y_test = split_data(glass_X, glass_y, method)
+
+    For k in [3, 5, 7]:
+
+        Y_pred = KNN_classifier(X_train, y_train, X_test, k, manhattan_distance)
+
+        Print(f”k={k}: Accuracy = {accuracy_score(y_test, y_pred)}”)
+
+    Print()
+
+7)
+
+Import pandas as pd
+
+From sklearn.tree import DecisionTreeClassifier
+
+From sklearn.model_selection import train_test_split
+
+From sklearn.metrics import accuracy_score, classification_report
+
+# Load the weather forecasting dataset
+
+Data = pd.read_csv(“weather.csv”)
+
+# Split the dataset into input features (X) and target variable (y)
+
+X = data.drop(‘play’, axis=1)
+
+Y = data[‘play’]
+
+# Split the dataset into training and testing sets
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a decision tree classifier object
+
+Clf = DecisionTreeClassifier()
+
+# Train the decision tree classifier on the training data
+
+Clf.fit(X_train, y_train)
+
+# Predict the target variable for the testing data
+
+Y_pred = clf.predict(X_test)
+
+# Evaluate the performance of the decision tree classifier
+
+Print(“Accuracy:”, accuracy_score(y_test, y_pred))
+
+Print(“Classification Report:”)
+
+Print(classification_report(y_test, y_pred))
+
+
